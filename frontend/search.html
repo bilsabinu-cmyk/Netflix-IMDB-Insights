@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Search | Netflix & IMDb Insights</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- ===========================
+          NAVBAR
+============================ -->
+
+<nav>
+
+<div class="logo">
+
+NETFLIX <span>& IMDb</span>
+
+</div>
+
+<ul>
+
+<li><a href="index.html">Home</a></li>
+
+<li><a href="dashboard.html">Dashboard</a></li>
+
+<li><a href="search.html">Search</a></li>
+
+<li><a href="prediction.html">Prediction</a></li>
+
+</ul>
+
+</nav>
+
+<!-- ===========================
+          SEARCH HERO
+============================ -->
+
+<header class="hero">
+
+<div class="hero-content appear">
+
+<small>
+
+NETFLIX SEARCH ENGINE • MOVIE DATABASE
+
+</small>
+
+<div class="accent-bar"></div>
+
+<h1>
+
+FIND THE<br>
+
+<span>PERFECT</span><br>
+
+TITLE.
+
+</h1>
+
+<p>
+
+Search thousands of Netflix movies and TV shows. Instantly view
+genre, country, release year, maturity rating, description and
+IMDb sentiment analysis generated using Machine Learning.
+
+</p>
+
+</div>
+
+</header>
+
+<!-- ===========================
+        SEARCH SECTION
+============================ -->
+
+<section class="search-container">
+
+<small>
+
+SEARCH DATABASE
+
+</small>
+
+<div class="accent-bar"></div>
+
+<h1>
+
+Search Any Netflix Title
+</h1>
+
+<p>
+
+Enter the exact or partial name of a movie or TV show to explore
+its Netflix metadata and IMDb sentiment analysis.
+
+</p>
+
+<br>
+
+<input
+type="text"
+id="movie"
+placeholder="Example: Stranger Things">
+
+<button onclick="searchMovie()">
+
+SEARCH TITLE →
+
+</button>
+
+<br><br>
+
+<div id="loading" class="loader hidden"></div>
+
+<div id="result" class="appear"></div>
+
+</section>
+<script>
+
+const input=document.getElementById("movie");
+
+input.addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+
+searchMovie();
+
+}
+
+});
+
+function searchMovie(){
+
+const movie=input.value.trim();
+
+const result=document.getElementById("result");
+
+const loader=document.getElementById("loading");
+
+if(movie===""){
+
+result.innerHTML=`
+
+<div class="movie-card">
+
+<h2>Please Enter a Movie Name</h2>
+
+<p>Type the name of a Netflix movie or TV show to begin searching.</p>
+
+</div>
+
+`;
+
+return;
+
+}
+
+loader.classList.remove("hidden");
+
+result.innerHTML="";
+
+fetch("http://127.0.0.1:5000/search/"+encodeURIComponent(movie))
+
+.then(response=>response.json())
+
+.then(data=>{
+
+loader.classList.add("hidden");
+
+let html="";
+
+if(data.message){
+
+html=`
+
+<div class="movie-card">
+
+<h2>Movie Not Found</h2>
+
+<p>
+
+We couldn't find <strong>${movie}</strong> in the current Netflix dataset.
+
+</p>
+
+<p>
+
+Try searching using the exact title.
+
+</p>
+
+</div>
+
+`;
+
+}
+
+else{
+
+data.forEach(item=>{
+
+html+=`
+
+<div class="movie-card appear">
+
+<h2>${item.title}</h2>
+
+<hr>
+
+<p><strong>Type</strong><br>${item.type}</p>
+
+<p><strong>Genre</strong><br>${item.listed_in}</p>
+
+<p><strong>Country</strong><br>${item.country}</p>
+
+<p><strong>Release Year</strong><br>${item.release_year}</p>
+
+<p><strong>Rating</strong><br>${item.rating}</p>
+
+<p><strong>IMDb Sentiment</strong><br>${item.sentiment}</p>
+
+<p><strong>Description</strong><br>${item.description}</p>
+
+</div>
+
+`;
+
+});
+
+}
+
+result.innerHTML=html;
+
+})
+
+.catch(error=>{
+
+loader.classList.add("hidden");
+
+result.innerHTML=`
+
+<div class="movie-card">
+
+<h2>Connection Error</h2>
+
+<p>
+
+Unable to connect to the Flask backend.
+
+</p>
+
+<p>
+
+Make sure the backend server is running on
+
+<strong>http://127.0.0.1:5000</strong>
+
+</p>
+
+</div>
+
+`;
+
+console.log(error);
+
+});
+
+}
+
+</script>
+
+</body>
+
+</html>

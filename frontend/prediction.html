@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Prediction | Netflix & IMDb Insights</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- ===========================
+          NAVBAR
+============================ -->
+
+<nav>
+
+<div class="logo">
+
+NETFLIX <span>& IMDb</span>
+
+</div>
+
+<ul>
+
+<li><a href="index.html">Home</a></li>
+
+<li><a href="dashboard.html">Dashboard</a></li>
+
+<li><a href="search.html">Search</a></li>
+
+<li><a href="prediction.html">Prediction</a></li>
+
+</ul>
+
+</nav>
+
+<!-- ===========================
+      PREDICTION HERO
+============================ -->
+
+<header class="hero">
+
+<div class="hero-content appear">
+
+<small>
+
+MACHINE LEARNING • CONTENT PREDICTION
+
+</small>
+
+<div class="accent-bar"></div>
+
+<h1>
+
+PREDICT<br>
+
+CONTENT<br>
+
+<span>SUCCESS.</span>
+
+</h1>
+
+<p>
+
+Use our Machine Learning model to predict whether a Netflix title
+is likely to receive a positive audience response based on its
+content characteristics such as genre, country, maturity rating,
+release year, and content type.
+
+</p>
+
+</div>
+
+</header>
+
+<!-- ===========================
+      PREDICTION FORM
+============================ -->
+
+<section class="prediction-container">
+
+<small>
+
+AI PREDICTION MODEL
+
+</small>
+
+<div class="accent-bar"></div>
+
+<h1>
+
+Predict Audience Sentiment
+</h1>
+
+<p>
+
+Provide the content details below to let our Machine Learning
+model analyze the title and predict whether it is likely to
+receive a positive audience sentiment.
+
+</p>
+
+<br>
+
+<input
+type="text"
+id="type"
+placeholder="Content Type (Movie / TV Show)">
+
+<input
+type="text"
+id="country"
+placeholder="Country (e.g. India, United States)">
+
+<input
+type="number"
+id="release_year"
+placeholder="Release Year (e.g. 2022)">
+
+<input
+type="text"
+id="rating"
+placeholder="Content Rating (e.g. TV-MA, PG-13)">
+
+<input
+type="text"
+id="listed_in"
+placeholder="Genre (e.g. Dramas, Comedies, Action)">
+
+<button onclick="predict()">
+
+PREDICT NOW →
+
+</button>
+
+<br><br>
+
+<div id="loading" class="loader hidden"></div>
+
+<div class="movie-card hidden" id="predictionCard">
+
+<h2>
+
+Prediction Result
+
+</h2>
+
+<hr>
+
+<div id="output"></div>
+
+</div>
+
+</section>
+<script>
+
+function predict(){
+
+const type=document.getElementById("type").value.trim();
+
+const country=document.getElementById("country").value.trim();
+
+const release_year=document.getElementById("release_year").value.trim();
+
+const rating=document.getElementById("rating").value.trim();
+
+const listed_in=document.getElementById("listed_in").value.trim();
+
+const output=document.getElementById("output");
+
+const loader=document.getElementById("loading");
+
+const card=document.getElementById("predictionCard");
+
+/* ===========================
+      INPUT VALIDATION
+=========================== */
+
+if(
+type==="" ||
+country==="" ||
+release_year==="" ||
+rating==="" ||
+listed_in===""){
+
+card.classList.remove("hidden");
+
+output.innerHTML=`
+
+<h3 style="color:#FF3D00;">Incomplete Details</h3>
+
+<br>
+
+<p>
+
+Please fill in all the required fields before making a prediction.
+
+</p>
+
+`;
+
+return;
+
+}
+
+loader.classList.remove("hidden");
+
+card.classList.add("hidden");
+
+fetch("http://127.0.0.1:5000/predict",{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+type:type,
+
+country:country,
+
+release_year:Number(release_year),
+
+rating:rating,
+
+listed_in:listed_in
+
+})
+
+})
+
+.then(res=>res.json())
+
+.then(data=>{
+
+loader.classList.add("hidden");
+
+card.classList.remove("hidden");
+
+output.innerHTML=`
+
+<h2 style="color:#FF3D00; margin-bottom:20px;">
+
+${data.Prediction}
+
+</h2>
+
+<p>
+
+<strong>Machine Learning Model</strong>
+
+<br>
+
+${data.Model}
+
+</p>
+
+<br>
+
+<p>
+
+This prediction is generated using the trained classification model
+based on the provided Netflix content attributes.
+
+</p>
+
+`;
+
+})
+
+.catch(error=>{
+
+loader.classList.add("hidden");
+
+card.classList.remove("hidden");
+
+output.innerHTML=`
+
+<h2 style="color:#FF3D00;">
+
+Prediction Failed
+
+</h2>
+
+<br>
+
+<p>
+
+Unable to connect to the Flask backend.
+
+</p>
+
+<p>
+
+Please ensure your backend server is running at
+
+<strong>http://127.0.0.1:5000</strong>
+
+</p>
+
+`;
+
+console.log(error);
+
+});
+
+}
+
+</script>
+
+<footer class="footer">
+
+<div class="container">
+
+<p>
+
+NETFLIX & IMDb INSIGHTS • MACHINE LEARNING PREDICTION
+
+</p>
+
+<br>
+
+<p>
+
+Developed by <strong>Team Alpha Tech</strong>
+
+</p>
+
+</div>
+
+</footer>
+
+</body>
+
+</html>

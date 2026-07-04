@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Netflix & IMDb Insights</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<!-- ===========================
+        NAVBAR
+============================ -->
+
+<nav>
+
+<div class="logo">
+
+NETFLIX <span>& IMDb</span>
+
+</div>
+
+<ul>
+
+<li>
+<a href="index.html">Home</a>
+</li>
+
+<li>
+<a href="dashboard.html">Dashboard</a>
+</li>
+
+<li>
+<a href="search.html">Search</a>
+</li>
+
+<li>
+<a href="prediction.html">Prediction</a>
+</li>
+
+</ul>
+
+</nav>
+
+<!-- ===========================
+          HERO
+============================ -->
+
+<header class="hero">
+
+<div class="hero-content appear">
+
+<small>
+
+Machine Learning • Netflix • IMDb • Analytics
+
+</small>
+
+<div class="accent-bar"></div>
+
+<h1>
+
+DISCOVER THE <span>STORY</span><br>
+
+BEHIND EVERY<br>
+
+MOVIE.
+
+</h1>
+
+<p>
+
+Explore thousands of Netflix titles, visualize streaming trends,
+analyze IMDb audience sentiment, and predict viewer responses
+using Machine Learning.
+
+</p>
+
+<div class="hero-buttons">
+
+<button onclick="location.href='dashboard.html'">
+
+Explore Dashboard →
+
+</button>
+
+</div>
+
+</div>
+
+</header>
+
+<!-- ===========================
+        HERO STATS
+============================ -->
+
+<section class="cards">
+
+<!-- ===========================
+        STATISTICS
+============================ -->
+
+<div class="card appear">
+
+<h2 id="titles">
+
+0
+
+</h2>
+
+<p>
+
+TOTAL TITLES
+
+</p>
+
+</div>
+
+<div class="card appear">
+
+<h2 id="movies">
+
+0
+
+</h2>
+
+<p>
+
+MOVIES
+
+</p>
+
+</div>
+
+<div class="card appear">
+
+<h2 id="shows">
+
+0
+
+</h2>
+
+<p>
+
+TV SHOWS
+
+</p>
+
+</div>
+
+<div class="card appear">
+
+<h2 id="positive">
+
+0
+
+</h2>
+
+<p>
+
+POSITIVE REVIEWS
+
+</p>
+
+</div>
+
+</section>
+
+<!-- ===========================
+        ABOUT PROJECT
+============================ -->
+
+<section class="about">
+
+<small>
+
+ABOUT THE PROJECT
+
+</small>
+
+<div class="accent-bar"></div>
+
+<h2>
+
+Where Netflix Content Meets
+IMDb Intelligence.
+
+</h2>
+
+<p>
+
+Netflix & IMDb Insights is a Machine Learning powered web platform
+that combines Netflix catalogue information with IMDb audience
+sentiment to generate meaningful entertainment analytics.
+The platform enables users to search Netflix titles, visualize
+content trends, explore interactive dashboards, and predict
+whether audience sentiment towards a movie review is positive
+or negative using trained machine learning models.
+
+</p>
+
+<br>
+
+<p>
+
+The project integrates data engineering, data visualization,
+and predictive analytics into a single platform, providing
+a modern solution for understanding audience preferences
+and streaming content performance.
+
+</p>
+
+</section>
+
+<!-- ===========================
+      VISUAL ANALYTICS
+============================ -->
+
+<section class="chart-section">
+
+<small>
+
+LIVE ANALYTICS
+
+</small>
+
+<div class="accent-bar"></div>
+
+<h2 class="page-title">
+
+Movies vs TV Shows
+
+</h2>
+
+<canvas id="typeChart"></canvas>
+
+</section>
+
+<!-- ===========================
+            FOOTER
+============================ -->
+
+<footer class="footer">
+
+<div class="container">
+
+<p>
+
+NETFLIX & IMDb INSIGHTS • MACHINE LEARNING PROJECT
+
+</p>
+
+<br>
+
+<p>
+
+Developed by <strong>Team Alpha Tech</strong>
+
+</p>
+
+</div>
+
+</footer>
+
+<!-- ===========================
+        JAVASCRIPT
+============================ -->
+
+<script>
+
+function animateValue(id, endValue){
+
+const element = document.getElementById(id);
+
+let start = 0;
+
+const duration = 1200;
+
+const stepTime = Math.max(Math.floor(duration/endValue),15);
+
+const timer = setInterval(()=>{
+
+start++;
+
+element.innerHTML = start.toLocaleString();
+
+if(start>=endValue){
+
+clearInterval(timer);
+
+element.innerHTML=endValue.toLocaleString();
+
+}
+
+},stepTime);
+
+}
+
+fetch("http://127.0.0.1:5000/dashboard")
+
+.then(response=>response.json())
+
+.then(data=>{
+
+animateValue("titles",data["Total Titles"]);
+
+animateValue("movies",data["Movies"]);
+
+animateValue("shows",data["TV Shows"]);
+
+animateValue("positive",data["Positive Reviews"]);
+
+const ctx=document.getElementById("typeChart");
+
+new Chart(ctx,{
+
+type:"doughnut",
+
+data:{
+
+labels:["Movies","TV Shows"],
+
+datasets:[{
+
+data:[
+
+data["Movies"],
+
+data["TV Shows"]
+
+],
+
+backgroundColor:[
+
+"#FF3D00",
+
+"#FAFAFA"
+
+],
+
+borderColor:"#0A0A0A",
+
+borderWidth:4,
+
+hoverOffset:12
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+
+legend:{
+
+position:"bottom",
+
+labels:{
+
+color:"#FAFAFA",
+
+font:{
+
+size:15,
+
+family:"Inter"
+
+}
+
+}
+
+}
+
+},
+
+cutout:"65%"
+
+}
+
+});
+
+})
+
+.catch(error=>{
+
+console.log(error);
+
+});
+
+</script>
+
+</body>
+
+</html>

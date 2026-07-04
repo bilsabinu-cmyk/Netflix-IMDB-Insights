@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Analytics Dashboard | Netflix & IMDb Insights</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Inter+Tight:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<!-- ===========================
+          NAVBAR
+============================ -->
+
+<nav>
+
+<div class="logo">
+
+NETFLIX <span>& IMDb</span>
+
+</div>
+
+<ul>
+
+<li><a href="index.html">Home</a></li>
+
+<li><a href="dashboard.html">Dashboard</a></li>
+
+<li><a href="search.html">Search</a></li>
+
+<li><a href="prediction.html">Prediction</a></li>
+
+</ul>
+
+</nav>
+
+<!-- ===========================
+        DASHBOARD HERO
+============================ -->
+
+<header class="hero">
+
+<div class="hero-content appear">
+
+<small>
+
+LIVE DATA VISUALIZATION • MACHINE LEARNING ANALYTICS
+
+</small>
+
+<div class="accent-bar"></div>
+
+<h1>
+
+STREAMING<br>
+
+<span>INSIGHTS</span><br>
+
+AT A GLANCE.
+
+</h1>
+
+<p>
+
+Explore interactive visualizations generated from the merged
+Netflix and IMDb datasets. Analyze genre popularity, country-wise
+content distribution, release year trends, and audience sentiment
+through dynamic charts powered by Flask and Chart.js.
+
+</p>
+
+</div>
+
+</header>
+
+<!-- ===========================
+      DASHBOARD SECTION
+============================ -->
+
+<section>
+
+<small>
+
+ANALYTICS DASHBOARD
+
+</small>
+
+<div class="accent-bar"></div>
+
+<h2 class="page-title">
+
+Entertainment Analytics
+
+</h2>
+
+<p class="text-center">
+
+These charts are generated in real time from your Flask backend,
+providing insights into Netflix content and IMDb audience
+sentiment.
+
+</p>
+
+<br><br>
+
+<div class="dashboard-grid">
+<div class="dashboard-card appear">
+
+<h3>
+
+Top Genres
+
+</h3>
+
+<p>
+
+Distribution of the most common genres available in the Netflix catalogue.
+
+</p>
+
+<br>
+
+<canvas id="genreChart"></canvas>
+
+</div>
+
+<div class="dashboard-card appear">
+
+<h3>
+
+Top Countries
+
+</h3>
+
+<p>
+
+Countries contributing the highest number of movies and TV shows.
+
+</p>
+
+<br>
+
+<canvas id="countryChart"></canvas>
+
+</div>
+
+<div class="dashboard-card appear">
+
+<h3>
+
+Release Trends
+
+</h3>
+
+<p>
+
+Year-wise growth of Netflix content available in the merged dataset.
+
+</p>
+
+<br>
+
+<canvas id="yearChart"></canvas>
+
+</div>
+
+<div class="dashboard-card appear">
+
+<h3>
+
+IMDb Sentiment
+
+</h3>
+
+<p>
+
+Positive vs Negative audience sentiment predicted using Machine Learning.
+
+</p>
+
+<br>
+
+<canvas id="sentimentChart"></canvas>
+
+</div>
+
+</div>
+
+</section>
+<script>
+
+const chartOptions = {
+
+responsive: true,
+
+maintainAspectRatio: true,
+
+plugins: {
+
+legend: {
+
+labels: {
+
+color: "#FAFAFA",
+
+font: {
+
+family: "Inter",
+
+size: 14
+
+}
+
+}
+
+}
+
+},
+
+scales: {
+
+x: {
+
+ticks: {
+
+color: "#FAFAFA"
+
+},
+
+grid: {
+
+color: "#262626"
+
+}
+
+},
+
+y: {
+
+ticks: {
+
+color: "#FAFAFA"
+
+},
+
+grid: {
+
+color: "#262626"
+
+},
+
+beginAtZero: true
+
+}
+
+}
+
+};
+
+/* ===========================
+        GENRE CHART
+=========================== */
+
+fetch("http://127.0.0.1:5000/genres")
+
+.then(res => res.json())
+
+.then(data => {
+
+new Chart(document.getElementById("genreChart"), {
+
+type: "bar",
+
+data: {
+
+labels: Object.keys(data),
+
+datasets: [{
+
+label: "Genres",
+
+data: Object.values(data),
+
+backgroundColor: "#FF3D00",
+
+borderColor: "#FF3D00",
+
+borderWidth: 1
+
+}]
+
+},
+
+options: chartOptions
+
+});
+
+});
+
+/* ===========================
+      COUNTRY CHART
+=========================== */
+
+fetch("http://127.0.0.1:5000/countries")
+
+.then(res => res.json())
+
+.then(data => {
+
+new Chart(document.getElementById("countryChart"), {
+
+type: "bar",
+
+data: {
+
+labels: Object.keys(data),
+
+datasets: [{
+
+label: "Countries",
+
+data: Object.values(data),
+
+backgroundColor: "#FAFAFA",
+
+borderColor: "#FAFAFA",
+
+borderWidth: 1
+
+}]
+
+},
+
+options: chartOptions
+
+});
+
+});
+
+/* ===========================
+      RELEASE YEAR
+=========================== */
+
+fetch("http://127.0.0.1:5000/years")
+
+.then(res => res.json())
+
+.then(data => {
+
+new Chart(document.getElementById("yearChart"), {
+
+type: "line",
+
+data: {
+
+labels: Object.keys(data),
+
+datasets: [{
+
+label: "Release Year",
+
+data: Object.values(data),
+
+borderColor: "#FF3D00",
+
+backgroundColor: "rgba(255,61,0,.15)",
+
+fill: true,
+
+tension: .35,
+
+pointBackgroundColor: "#FAFAFA",
+
+pointRadius: 3
+
+}]
+
+},
+
+options: chartOptions
+
+});
+
+});
+
+/* ===========================
+      SENTIMENT CHART
+=========================== */
+
+fetch("http://127.0.0.1:5000/sentiment")
+
+.then(res => res.json())
+
+.then(data => {
+
+new Chart(document.getElementById("sentimentChart"), {
+
+type: "doughnut",
+
+data: {
+
+labels: Object.keys(data),
+
+datasets: [{
+
+data: Object.values(data),
+
+backgroundColor: [
+
+"#FF3D00",
+
+"#FAFAFA"
+
+],
+
+borderColor: "#0A0A0A",
+
+borderWidth: 3
+
+}]
+
+},
+
+options: {
+
+responsive: true,
+
+plugins: {
+
+legend: {
+
+position: "bottom",
+
+labels: {
+
+color: "#FAFAFA",
+
+font: {
+
+family: "Inter",
+
+size: 14
+
+}
+
+}
+
+}
+
+},
+
+cutout: "65%"
+
+}
+
+});
+
+})
+
+.catch(error => {
+
+console.log(error);
+
+});
+
+</script>
+
+<footer class="footer">
+
+<div class="container">
+
+<p>
+
+NETFLIX & IMDb INSIGHTS • ANALYTICS DASHBOARD
+
+</p>
+
+<br>
+
+<p>
+
+Developed by <strong>Team Alpha Tech</strong>
+
+</p>
+
+</div>
+
+</footer>
+
+</body>
+
+</html> 
