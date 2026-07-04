@@ -1,5 +1,5 @@
 from pathlib import Path
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 import pandas as pd
 import joblib
@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "datasets"
 MODEL_DIR = BASE_DIR / "models"
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder="../frontend/build", static_url_path="/")
 CORS(app)
 
 
@@ -55,12 +55,17 @@ encoders = load_model("encoders.pkl")
 
 @app.route("/")
 def home():
-    return jsonify({
-        "Project": "Netflix & IMDb Insights",
-        "Version": "1.0",
-        "Status": "Running"
-    })
+    return send_from_directory("../frontend/build", "index.html")
 
+
+@app.route("/css/<path:filename>")
+def css_files(filename):
+    return send_from_directory("../frontend/css", filename)
+
+
+@app.route("/js/<path:filename>")
+def js_files(filename):
+    return send_from_directory("../frontend/js", filename)
 
 @app.route("/dashboard", methods=["GET"])
 def dashboard():
