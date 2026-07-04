@@ -8,7 +8,11 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "datasets"
 MODEL_DIR = BASE_DIR / "models"
 
-app = Flask(__name__,static_folder="../frontend/build", static_url_path="/")
+app = Flask(
+    __name__,
+    static_folder="../frontend",
+    static_url_path="/"
+)
 CORS(app)
 
 
@@ -55,7 +59,7 @@ encoders = load_model("encoders.pkl")
 
 @app.route("/")
 def home():
-    return send_from_directory("../frontend/build", "index.html")
+    return send_from_directory("../frontend", "index.html")
 
 
 @app.route("/css/<path:filename>")
