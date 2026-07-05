@@ -115,11 +115,13 @@ receive a positive audience sentiment.
 
 <br>
 
-<input
-type="text"
-id="type"
-placeholder="Content Type (Movie / TV Show)">
+<label>Type</label>
 
+<select id="type">
+    <option value="">Select Type</option>
+    <option>Movie</option>
+    <option>TV Show</option>
+</select>
 <input
 type="text"
 id="country"
@@ -135,11 +137,18 @@ type="text"
 id="rating"
 placeholder="Content Rating (e.g. TV-MA, PG-13)">
 
-<input
-type="text"
-id="listed_in"
-placeholder="Genre (e.g. Dramas, Comedies, Action)">
+<label>Genre</label>
 
+<select id="listed_in">
+    <option value="">Select Genre</option>
+    <option>Action & Adventure</option>
+    <option>Action & Adventure, Anime Features</option>
+    <option>Action & Adventure, Children & Family Movies</option>
+    <option>Action & Adventure, Children & Family Movies, Dramas</option>
+    <option>Comedies</option>
+    <option>Dramas</option>
+    <option>Documentaries</option>
+</select>
 <button onclick="predict()">
 
 PREDICT NOW →
