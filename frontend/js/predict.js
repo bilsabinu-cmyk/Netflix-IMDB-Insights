@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:5000";
+const API = "";
 
 async function predict() {
 
@@ -151,7 +151,7 @@ async function predict() {
             <p>
 
                 Ensure the backend server is running on
-                <strong>http://127.0.0.1:5000</strong>
+                <strong> </strong>
 
             </p>
 

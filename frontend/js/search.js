@@ -1,4 +1,4 @@
-const API = "http://127.0.0.1:5000";
+const API = "";
 
 async function searchMovie() {
 
@@ -186,7 +186,7 @@ async function searchMovie() {
 
                 Make sure your backend is running on
 
-                <strong>http://127.0.0.1:5000</strong>
+                <strong> </strong>
 
             </p>
 
