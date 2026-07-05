@@ -246,9 +246,16 @@ listed_in:listed_in
 
 })
 
-.then(res=>res.json())
+.then(async res => {
+    const data = await res.json();
 
-.then(data=>{
+    if (!res.ok) {
+        throw new Error(data.error || "Prediction failed");
+    }
+
+    return data;
+})
+.then(data => {
 
 loader.classList.add("hidden");
 
@@ -318,6 +325,10 @@ Please ensure your backend server is running at
 `;
 
 console.log(error);
+output.innerHTML = `
+<h2 style="color:#FF3D00;">Prediction Failed</h2>
+<p>${error.message}</p>
+`;
 
 });
 
@@ -346,8 +357,6 @@ Developed by <strong>Team Alpha Tech</strong>
 </div>
 
 </footer>
-
-<script src="js/predict.js"></script>
 
 </body>
 
