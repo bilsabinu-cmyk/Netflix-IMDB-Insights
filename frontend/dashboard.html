@@ -276,7 +276,7 @@ beginAtZero: true
         GENRE CHART
 =========================== */
 
-fetch("http://127.0.0.1:5000/genres")
+fetch("/genres")
 
 .then(res => res.json())
 
@@ -316,7 +316,7 @@ options: chartOptions
       COUNTRY CHART
 =========================== */
 
-fetch("http://127.0.0.1:5000/countries")
+fetch("/countries")
 
 .then(res => res.json())
 
@@ -356,7 +356,7 @@ options: chartOptions
       RELEASE YEAR
 =========================== */
 
-fetch("http://127.0.0.1:5000/years")
+fetch("/years")
 
 .then(res => res.json())
 
@@ -402,7 +402,7 @@ options: chartOptions
       SENTIMENT CHART
 =========================== */
 
-fetch("http://127.0.0.1:5000/sentiment")
+fetch("/sentiment")
 
 .then(res => res.json())
 
